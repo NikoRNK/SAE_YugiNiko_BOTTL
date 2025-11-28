@@ -6,6 +6,8 @@ from .commands.prices import prices
 from .commands.market import market
 from .commands.volatility import volatility
 from .commands.help import help_command
+from .commands.chart import chart
+from .commands.chart_ind import chart_ind
 
 from .command_registry import register_command  # <<< nouveau
 
@@ -22,4 +24,7 @@ def register_handlers(app: Application) -> None:
     add_command(app, "prices", prices, "Prix de plusieurs cryptos.")
     add_command(app, "market", market, "Vue marché (prix, Δ24h, volume).")
     add_command(app, "volatility", volatility, "Volatilité annualisée approximative.")
+    add_command(app, "chart", chart, "Graphique des prix d'une crypto (ex. /chart bitcoin 7).")
+    add_command(app, "chart_ind", chart_ind, "Graphique avec indicateurs techniques (ex. /chart_ind Bitcoin [finance:Bitcoin] 30).")
+    
     # Tu rajoutes ici les futures commandes.
