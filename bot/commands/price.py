@@ -7,9 +7,9 @@ from ..services import get_price_usd, normalize_coin
 async def price(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not context.args:
         await update.message.reply_text(
-            "<b>Usage :</b>\n"
-            "/price bitcoin\n"
-            "/price eth"
+            "📌 Usage :\n"
+            "➡️ /price bitcoin\n"
+            "➡️ /price eth"
         )
         return
 
@@ -19,20 +19,20 @@ async def price(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
         value = get_price_usd(coin_id)
         await update.message.reply_text(
-            f"<b>Prix actuel</b>\n"
-            f"Monnaie : de>{raw}</code> (id : de>{coin_id}</code>)\n"
-            f"Valeur : <b>{value:.4f} $</b>"
+            "💰 Prix actuel\n"
+            f"🪙 Monnaie : {raw} (id : {coin_id})\n"
+            f"📈 Valeur : {value:.4f} $"
         )
 
     except KeyError:
         await update.message.reply_text(
-            "<b>Monnaie inconnue.</b>\n"
+            "⚠️ Monnaie inconnue.\n"
             "Le bot utilise une API avec une liste précise de cryptos.\n"
             "Attention à bien écrire le nom de la monnaie (orthographe exacte), "
-            "par exemple : de>bitcoin</code>, de>ethereum</code>, de>solana</code>."
+            "par exemple : bitcoin, ethereum, solana."
         )
 
     except Exception as e:
         await update.message.reply_text(
-            f"<b>Erreur technique</b> pour de>{raw}</code> : de>{e}</code>"
+            f"🚨 Erreur technique pour {raw} : {e}"
         )
