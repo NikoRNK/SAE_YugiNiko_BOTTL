@@ -4,10 +4,44 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from ..services import get_ohlc
-from ..charts import build_price_chart_png
+
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import matplotlib.dates as mdates
+
+
+def build_price_chart_png(ohlc, file_path):
+    """
+    ohlc : liste de [timestamp_ms, open, high, low, close]
+    file_path : objet Path ou str vers le fichier PNG à créer
+    """
+    # Met les données dans un DataFrame
+    df = pd.DataFrame(ohlc, columns=["ts", "open", "high", "low", "close"])
+
+    # Convertit les timestamps (en millisecondes) en datetime
+    df["time"] = pd.to_datetime(df["ts"], unit="ms")
+
+    fig, ax = plt.subplots(figsize=(8, 3))
+
+    ax.plot(df["time"], df["close"], linewidth=1.5)
+
+    ax.set_title("Prix en USD")
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Prix")
+
+    # Formattage propre des dates sur l'axe X
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m"))
+    fig.autofmt_xdate()      # incline les labels de dates
+    fig.tight_layout()
+
+    fig.savefig(file_path, bbox_inches="tight")
+    plt.close(fig)
+
 
 
 async def chart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    # /chart in> <jours>
     if len(context.args) < 2:
         await update.message.reply_text(
             "📊 Usage :\n"
@@ -28,6 +62,7 @@ async def chart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         )
         return
 
+    # Récupérer les données OHLC
     try:
         ohlc = get_ohlc(coin_id, days)
     except Exception as e:
@@ -40,6 +75,7 @@ async def chart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         )
         return
 
+    # Construire le graphique et l'envoyer
     file_path = Path("chart_price.png")
     build_price_chart_png(ohlc, file_path)
 
