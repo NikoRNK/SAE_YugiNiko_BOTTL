@@ -1,4 +1,17 @@
 import requests
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
+
+_MODEL_NAME = "kk08/CryptoBERT"
+
+_tokenizer = AutoTokenizer.from_pretrained(_MODEL_NAME)
+_model = AutoModelForSequenceClassification.from_pretrained(_MODEL_NAME)
+
+crypto_sentiment = pipeline(
+    "sentiment-analysis",
+    model=_model,
+    tokenizer=_tokenizer,
+)
+
 
 COINGECKO_BASE_URL = "https://api.coingecko.com/api/v3"
 
@@ -73,3 +86,4 @@ def get_ohlc(coin_id: str, days: int) -> list[list[float]]:
     r = requests.get(url, params=params, timeout=10)
     r.raise_for_status()
     return r.json()
+
