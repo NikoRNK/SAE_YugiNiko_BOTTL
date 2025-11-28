@@ -2,6 +2,25 @@ import requests
 
 COINGECKO_BASE_URL = "https://api.coingecko.com/api/v3"
 
+# Mapping symbol -> id CoinGecko
+SYMBOL_TO_ID = {
+    "btc": "bitcoin",
+    "eth": "ethereum",
+    "sol": "solana",
+    # ajoute ce que tu veux ici
+}
+
+
+def normalize_coin(user_input: str) -> str:
+    """
+    Normalise l'entrée utilisateur :
+    - met en minuscule
+    - mappe les symboles connus vers les ids CoinGecko
+    - sinon, renvoie tel quel (pour 'bitcoin', 'solana', etc.)
+    """
+    s = user_input.lower()
+    return SYMBOL_TO_ID.get(s, s)
+
 
 def get_price_usd(coin_id: str) -> float:
     url = f"{COINGECKO_BASE_URL}/simple/price"
