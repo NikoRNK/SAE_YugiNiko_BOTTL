@@ -9,6 +9,12 @@ from .commands.help import help_command
 from .commands.chart import chart
 from .commands.chart_ind import chart_ind
 from .commands.ia import ia
+from .commands.ia import ia
+from .commands.motscles import motscles
+from .commands.tendance7 import tendance7
+from .commands.bougie import bougie
+from .commands.simplifie import simplifie
+
 
 
 from .command_registry import register_command  # <<< nouveau
@@ -29,5 +35,10 @@ def register_handlers(app: Application) -> None:
     add_command(app, "chart", chart, "Graphique des prix d'une crypto (ex. /chart bitcoin 7).")
     add_command(app, "chart_ind", chart_ind, "Graphique avec indicateurs techniques (ex. /chart_ind Bitcoin [finance:Bitcoin] 30).")
     add_command(app, "ia", ia, "Analyse IA du sentiment des news crypto sur 24h.")
+    add_command(app, "ia", ia, "Analyse IA du sentiment des news sur 24h.")
+    add_command(app, "motscles", motscles, "Mots-clés dominants dans les news crypto.")
+    add_command(app, "tendance7", tendance7, "Tendance de prix sur 7 jours pour une crypto.")
+    add_command(app, "bougie", bougie, "Explique la dernière bougie (bullish/bearish, marteau, doji...).")
+    add_command(app, "simplifie", simplifie, "Résumé texte d'un graphique sur N jours.")
 
     # Tu rajoutes ici les futures commandes.
