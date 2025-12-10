@@ -12,6 +12,7 @@ ERROR_MAIL_TO = os.getenv("ERROR_MAIL_TO")          # ex: tonmail@outlook.com
 ERROR_MAIL_SMTP = os.getenv("ERROR_MAIL_SMTP", "smtp.office365.com")
 ERROR_MAIL_PORT = int(os.getenv("ERROR_MAIL_PORT", "587"))
 ERROR_MAIL_PASSWORD = os.getenv("ERROR_MAIL_PASSWORD")
+DISCORD_ERROR_WEBHOOK_URL = os.getenv("DISCORD_ERROR_WEBHOOK_URL")
 
 _MODEL_NAME = "kk08/CryptoBERT"
 
@@ -114,3 +115,16 @@ def send_error_email(subject: str, body: str) -> None:
         server.starttls()  # chiffrement TLS (port 587)
         server.login(ERROR_MAIL_FROM, ERROR_MAIL_PASSWORD)
         server.send_message(msg)
+
+def send_discord_log(text: str) -> None:
+    if not DISCORD_ERROR_WEBHOOK_URL:
+        return
+
+    payload = {
+        "content": text[:1900]  # pour rester sous la limite 2000 caractères
+    }
+    try:
+        requests.post(DISCORD_ERROR_WEBHOOK_URL, json=payload, timeout=5)
+    except Exception:
+        # on évite de faire planter le bot si Discord ne répond pas
+        pass
