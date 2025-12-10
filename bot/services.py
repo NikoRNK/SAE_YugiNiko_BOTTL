@@ -1,5 +1,17 @@
 import requests
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
+import os
+import smtplib
+from email.mime.text import MIMEText
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ERROR_MAIL_FROM = os.getenv("ERROR_MAIL_FROM")      # ex: tonmail@outlook.com
+ERROR_MAIL_TO = os.getenv("ERROR_MAIL_TO")          # ex: tonmail@outlook.com
+ERROR_MAIL_SMTP = os.getenv("ERROR_MAIL_SMTP", "smtp.office365.com")
+ERROR_MAIL_PORT = int(os.getenv("ERROR_MAIL_PORT", "587"))
+ERROR_MAIL_PASSWORD = os.getenv("ERROR_MAIL_PASSWORD")
 
 _MODEL_NAME = "kk08/CryptoBERT"
 
@@ -87,3 +99,18 @@ def get_ohlc(coin_id: str, days: int) -> list[list[float]]:
     r.raise_for_status()
     return r.json()
 
+def send_error_email(subject: str, body: str) -> None:
+    """Envoie un mail simple en texte brut pour les erreurs du bot."""
+    if not (ERROR_MAIL_FROM and ERROR_MAIL_TO and ERROR_MAIL_PASSWORD):
+        # Config incomplète -> on ne tente rien
+        return
+
+    msg = MIMEText(body, _charset="utf-8")
+    msg["Subject"] = subject
+    msg["From"] = ERROR_MAIL_FROM
+    msg["To"] = ERROR_MAIL_TO
+
+    with smtplib.SMTP(ERROR_MAIL_SMTP, ERROR_MAIL_PORT) as server:
+        server.starttls()  # chiffrement TLS (port 587)
+        server.login(ERROR_MAIL_FROM, ERROR_MAIL_PASSWORD)
+        server.send_message(msg)
