@@ -24,27 +24,6 @@ Bot Telegram développé en Python pour analyser des informations, automatiser d
 
 ---
 
-## 🧱 Architecture du projet
-SAE_YugiNiko_BOTTL/
-├── main.py # Entrée principale du bot
-├── .env # Variables d'environnement (non versionné)
-├── bot/
-│ ├── init.py
-│ ├── handlers/
-│ │ ├── init.py
-│ │ ├── help.py # Commande /help
-│ │ ├── boom.py # Commande /boom (test d'erreur)
-│ │ └── ... # Autres commandes
-│ ├── services/
-│ │ ├── init.py
-│ │ └── ... # Fonctions utilitaires / appels API
-│ └── error_handler.py # Gestion globale des erreurs + Discord
-├── requirements.txt
-├── .gitignore
-└── README.md
-
----
-
 ## ⚙️ Stack technique
 
 - **Langage** : Python
